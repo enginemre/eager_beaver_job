@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_flow"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.engin.eagerbeaver.presentation.auth.login.LoginFragment"
+        android:label="Giriş"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_home_graph"
+            app:destination="@id/main_flow" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.engin.eagerbeaver.presentation.auth.register.RegisterFragment"
+        android:label="Kayıt Ol"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_registerFragment_to_home_graph"
+            app:destination="@id/main_flow" />
+    </fragment>
+
+
+    <include app:graph="@navigation/main_flow" />
+</navigation>

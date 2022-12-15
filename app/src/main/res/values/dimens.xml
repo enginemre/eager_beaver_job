@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="body_text">14sp</dimen>
+    <dimen name="default_padding_xsmall">6dp</dimen>
+    <dimen name="default_padding_small">8dp</dimen>
+    <dimen name="default_padding_medium">10dp</dimen>
+    <dimen name="default_padding">12dp</dimen>
+    <dimen name="default_padding_xlarge">16dp</dimen>
+    <dimen name="default_padding_large">14dp</dimen>
+    <dimen name="main_text">16sp</dimen>
+    <dimen name="main_text_sub">14sp</dimen>
+    <dimen name="main_text_sub_small">12sp  </dimen>
+    <dimen name="main_text_min">10sp</dimen>
+    <dimen name="main_title_large">22sp</dimen>
+    <dimen name="main_title_small">18sp</dimen>
+    <dimen name="main_title_medium">20sp</dimen>
+    <dimen name="card_corner">16dp</dimen>
+</resources>

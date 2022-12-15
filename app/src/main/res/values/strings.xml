@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">EagerBeaver</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">ses</string>
+    <string name="user_name">Kullanıcı Adı</string>
+    <string name="login">Giriş</string>
+    <string name="app_logo">Kunduz</string>
+    <string name="password">Şifre</string>
+    <string name="forget_password">Hay aksi şifreni mi unuttun ? </string>
+    <string name="login_with_guest">Misafir Olarak Giriş</string>
+    <string name="register_now">Hala kayıt olmadın mı ? Şimdi kaydol</string>
+    <string name="username_length_error">Kullanıcı adı 8 karakterden az olamaz</string>
+    <string name="fields_empty_error">Bu alanlar boş olamaz</string>
+    <string name="password_length_error">Şifre uzunluğu 4 ten az olamaz</string>
+    <string name="loading_label">Yükleniyor</string>
+    <string name="register_label">Kayıt Olun</string>
+    <string name="name_label">Ad Soyad</string>
+    <string name="email_label">E-posta</string>
+    <string name="register">Kaydol</string>
+    <string name="employer">İş Verenim</string>
+    <string name="applicant">İş Arıyorum</string>
+    <string name="error_fields_empty">Tüm alanlar zorunludur</string>
+    <string name="error_password_length">Şifre 5 karakterden uzun olmalıdır</string>
+    <string name="error_email_validation">Geçersiz E posta</string>
+    <string name="error_radio_button">Lütfen kullanıcı rolünü seçiniz</string>
+    <string name="register_body">İş arayan ya da iş veren olun hemen kaydolun hedefinize ulaşın</string>
+    <string name="home">Ana Sayfa</string>
+    <string name="find_work">İş Ara</string>
+    <string name="profile">Profil</string>
+    <string name="application">Başvurularım</string>
+    <string name="category">Kategoriler</string>
+    <string name="label_last_jobs">Güncel İlanlar</string>
+    <string name="view_all"><u>Tümünü gör</u> </string>
+    <string name="filter">Filitre</string>
+    <string name="edit">Düzenle</string>
+    <string name="description">Açıklama</string>
+    <string name="interested_with">İlgi Alanları</string>
+    <string name="birthdate">Doğum Tarihi</string>
+    <string name="upload_file">dosya yükle</string>
+    <string name="apply_now">Şimdi Başvur</string>
+    <string name="label_job_advert">Verilen İş İlanları</string>
+    <string name="job_advert">İş İlanı</string>
+    <string name="job_title_label">İş Başlığı</string>
+    <string name="job_position_label">Pozisyon</string>
+    <string name="salary_range">En Düşük Maaş</string>
+    <string name="TL"> TL </string>
+    <string name="create">Oluştur</string>
+    <string name="not_found_text">Buraya ulaşmaya çalışılırken bir hata oluştu</string>
+    <string name="try_again">Tekrar Dene</string>
+    <string name="location">Konum</string>
+    <string name="job_type">İş Tipi</string>
+    <string name="filtering">Filitrele</string>
+    <string name="clean">Temizle</string>
+    <string name="more_info">Daha Fazla Bilgi</string>
+    <string name="introduction_string">İş arayan iş veren olun hep bizimle olun...</string>
+    <string name="my_applicant">Başvurularım</string>
+    <string name="toolbar_app_name">Eager Beaver Job</string>
+
+    <string-array name="job_types">
+        <item>İş tipi seçiniz</item>
+        <item>Tam Zamanlı</item>
+        <item>Yarı Zamanlı</item>
+        <item>Staj</item>
+        <item>Uzaktan</item>
+    </string-array>
+
+    <string-array name="job_positions">
+        <item>Pozisyon seçiniz</item>
+        <item>Junior</item>
+        <item>Senior</item>
+        <item>Middle</item>
+        <item>Stajer</item>
+    </string-array>
+</resources>

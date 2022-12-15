@@ -1,0 +1,35 @@
+<resources >
+    <!-- Base application theme. -->
+    <style name="Theme.EagerBeaver" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/Teal900</item>
+        <item name="colorPrimaryVariant">@color/Teal700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/Cream500</item>
+        <item name="colorSecondaryVariant">@color/Cream200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="fontFamily">@font/pt_sans</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/Teal900</item>
+        <!-- Customize your theme here. -->
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+<!--        <item name="actionBarStyle">@style/ToolbarStyle</item>-->
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+
+    </style>
+
+    <style name="Circular">
+        <item name="cornerSize">50%</item>
+    </style>
+    
+    <style name="ToolbarStyle" parent="Widget.Material3.Toolbar">
+
+    </style>
+</resources>
