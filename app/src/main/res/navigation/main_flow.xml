@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_flow"
     app:startDestination="@id/home_fragment">
-    <include app:graph="@navigation/search_flow" />
+
     <include app:graph="@navigation/applicant_flow"/>
     <fragment
         android:id="@+id/home_fragment"
@@ -16,26 +16,62 @@
             app:destination="@id/jobDetailFragment" />-->
         <action
             android:id="@+id/action_home_fragment_to_search_flow"
-            app:destination="@id/search_flow">
+            app:destination="@id/searchFragment">
             <argument
                 android:name="category_id"
                 app:argType="long" />
         </action>
+        <action
+            android:id="@+id/action_home_fragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/profile_fragment"
         android:name="com.engin.eagerbeaver.presentation.main.profile.ProfileFragment"
         android:label="Profil"
         tools:layout="@layout/fragment_profile" />
-
-<!--    <fragment
+    <fragment
         android:id="@+id/jobDetailFragment"
         android:name="com.engin.eagerbeaver.presentation.main.job_detail.JobDetailFragment"
-        android:label="fragment_job_detail"
-        tools:layout="@layout/fragment_job_detail" >
+        android:label="JobDetailFragment">
+
         <argument
             android:name="job_id"
             app:argType="long" />
-    </fragment>-->
+        <action
+            android:id="@+id/action_jobDetailFragmentSearch_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_jobDetailFragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
+        <argument
+            android:name="comingFrom"
+            android:defaultValue="/jobs"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.engin.eagerbeaver.presentation.main.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <argument
+            android:name="category_id"
+            app:argType="long" />
+    </fragment>
+    <action android:id="@+id/action_global_jobDetailFragment" app:destination="@id/jobDetailFragment">
+
+    </action>
+
+    <!--    <fragment
+            android:id="@+id/jobDetailFragment"
+            android:name="com.engin.eagerbeaver.presentation.main.job_detail.JobDetailFragment"
+            android:label="fragment_job_detail"
+            tools:layout="@layout/fragment_job_detail" >
+            <argument
+                android:name="job_id"
+                app:argType="long" />
+        </fragment>-->
 
 </navigation>

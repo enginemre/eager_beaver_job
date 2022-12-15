@@ -30,7 +30,7 @@ class SearchViewModel @Inject constructor(
     }
     private fun getJobs(category_id:Long?){
         val jobList:List<JobAdvert>
-        if(category_id != null){
+        if(category_id != null && category_id == 0L){
             jobList = listOf(
                 JobAdvert(
                     EmployerUser(name = "Apple","apple@gmail.com","apple_cmp",

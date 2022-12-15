@@ -82,9 +82,9 @@ class HomeFragment : Fragment() {
                             viewModel.navigated()
                         }
                         is Route.JobDetail -> {
-                          /*  val action = HomeFragmentDirections.actionHomeFragmentToJobDetailFragment(route.jobId)
+                            val action = HomeFragmentDirections.actionGlobalJobDetailFragment(route.jobId)
                             navController.navigate(action)
-                            viewModel.navigated()*/
+                            viewModel.navigated()
                         }
                         else -> {}
                     }

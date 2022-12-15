@@ -7,7 +7,7 @@
             android:icon="@drawable/ic_home"
             android:title="@string/home"/>
         <item
-            android:id="@+id/search_flow"
+            android:id="@+id/searchFragment"
             android:icon="@drawable/ic_work"
             android:title="@string/find_work"/>
 

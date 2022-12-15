@@ -2,6 +2,7 @@ package com.engin.eagerbeaver.presentation.main.job_detail
 
 import android.os.Bundle
 import android.view.*
+import androidx.activity.R
 import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.engin.eagerbeaver.common.CustomSnackBar
 import com.engin.eagerbeaver.common.SnackType
 import com.engin.eagerbeaver.common.presentation.component.LoadingDialog
+import com.engin.eagerbeaver.common.presentation.util.Route
 import com.engin.eagerbeaver.databinding.FragmentJobDetailBinding
 import com.engin.eagerbeaver.presentation.main.job_detail.viewmodel.JobDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,17 +26,26 @@ class JobDetailFragment : Fragment(), MenuProvider {
     private var  _binding: FragmentJobDetailBinding? = null
     private val binding get() =  _binding!!
     private val viewModel:JobDetailViewModel by viewModels()
+    private lateinit var comingFrom: Route?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            comingFrom = if( it.getString("comingFrom") == "/home" && it.getString("comingFrom") != null) Route.Home() else Route.Jobs()
+        }
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            goBack()
+            goBack(comingFrom!!)
         }
     }
 
-    private fun goBack() {
-        val action = JobDetailFragmentDirections.actionJobDetailFragmentSearchToSearchFragment(0L)
-        findNavController().navigate(action)
+    private fun goBack(comingFrom:Route) {
+        if(comingFrom is Route.Jobs){
+            val action = JobDetailFragmentDirections.actionJobDetailFragmentSearchToSearchFragment(0L)
+            findNavController().navigate(action)
+        }else{
+            val action = JobDetailFragmentDirections.actionJobDetailFragmentToHomeFragment()
+            findNavController().navigate(action)
+        }
     }
 
     override fun onCreateView(
