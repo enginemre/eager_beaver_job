@@ -2,42 +2,81 @@ package com.engin.eagerbeaver.presentation.main.search.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.engin.eagerbeaver.common.domain.model.Category
-import com.engin.eagerbeaver.common.domain.model.JobAdvert
-import com.engin.eagerbeaver.common.domain.model.UserRole
+import androidx.lifecycle.viewModelScope
+import com.engin.eagerbeaver.common.domain.model.*
+import com.engin.eagerbeaver.common.domain.util.Resource
 import com.engin.eagerbeaver.common.presentation.util.Route
-import com.engin.eagerbeaver.domain.auth.model.EmployerUser
+import com.engin.eagerbeaver.domain.main.usecase.SearchJobUseCase
 import com.engin.eagerbeaver.presentation.main.home.components.JobCardListener
 import com.engin.eagerbeaver.presentation.main.search.SearchState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val searchJobUseCase: SearchJobUseCase
 ) : ViewModel(),JobCardListener {
 
     private var _state:MutableStateFlow<SearchState> = MutableStateFlow(SearchState())
     val state:StateFlow<SearchState> = _state.asStateFlow()
     private val categoryId :Long? = savedStateHandle["category_id"]
+
+    private var searchJob: Job? =null
+
     init {
         getJobs(category_id = categoryId)
     }
-    private fun getJobs(category_id:Long?){
-        val jobList:List<JobAdvert>
+    private fun getJobs(category_id:Long?,jobType: JobType? =null){
+        if(category_id != null && category_id == 0L){
+            // Get jobs without filter
+            searchJob?.cancel()
+            searchJob = searchJobUseCase(jobType = jobType, categoryId = categoryId).onEach { resource ->
+                when(resource){
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessage = resource.message
+                            )
+                        }
+                    }
+                    is Resource.Loading -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
+                    is Resource.Success -> {
+                        resource.data?.let { data->
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    jobsList = data
+                                )
+                            }
+                        }
+                    }
+                }
+            }.launchIn(viewModelScope)
+        }else{
+            // Activate filter
+        }
+
+
+        /*val jobList:List<JobAdvert>
         if(category_id != null && category_id == 0L){
             jobList = listOf(
                 JobAdvert(
-                    EmployerUser(name = "Apple","apple@gmail.com","apple_cmp",
-                        UserRole.EMPLOYER, age = 23),
+                    EmployeeUser(name = "Apple","apple@gmail.com","apple_cmp",
+                        UserRole.EMPLOYEE),
                     "iOS Developer",
-                    "Senior",
-                    type = "Full-Time",
+                    JobPosition.Senior,
+                    type = JobType.Intern,
                     Category("Bilgi Teknolojileri",1L,"https://cdn-icons-png.flaticon.com/512/6062/6062646.png"),
                     salary = 12600,
                     description = "A technology client is looking for a remote Android developer responsible for the development and maintenance of applications aimed at a vast number of diverse Android devices.\n" +
@@ -76,11 +115,11 @@ class SearchViewModel @Inject constructor(
         }
         else{
             jobList = listOf(JobAdvert(
-                EmployerUser(name = "Apple","apple@gmail.com","apple_cmp",
-                    UserRole.EMPLOYER, age = 23),
+                EmployeeUser(name = "Apple","apple@gmail.com","apple_cmp",
+                    UserRole.EMPLOYEE),
                 "iOS Developer",
-                "Senior",
-                type = "Full-Time",
+                JobPosition.Senior,
+                type = JobType.Intern,
                 Category("Bilgi Teknolojileri",1L,"https://cdn-icons-png.flaticon.com/512/6062/6062646.png"),
                 salary = 12600,
                 description = "A technology client is looking for a remote Android developer responsible for the development and maintenance of applications aimed at a vast number of diverse Android devices.\n" +
@@ -110,10 +149,10 @@ class SearchViewModel @Inject constructor(
                 id = 1L
             ),
                 JobAdvert(
-                    EmployerUser(name = "Goolge","goolge@gmail.com","goolge_cmp",UserRole.EMPLOYER, age = 43),
+                    EmployeeUser(name = "Goolge","goolge@gmail.com","goolge_cmp",UserRole.EMPLOYEE),
                     "iOS Developer",
-                    "Junior",
-                    type = "Intern",
+                    JobPosition.Senior,
+                    type = JobType.Intern,
                     Category("Bilgi Teknolojileri",1L,"https://cdn-icons-png.flaticon.com/512/6062/6062646.png"),
                     salary = 12600,
                     description = "We are looking for Senior iOS and/or Android Developer working on our mobile\n" +
@@ -241,7 +280,7 @@ class SearchViewModel @Inject constructor(
                     jobsList = jobList
                 )
             }
-        }
+        }*/
     }
 
     fun applyFilter(){

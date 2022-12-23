@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/advert_flow"
+    app:startDestination="@id/advertsFragment">
+    <fragment
+        android:id="@+id/advertsFragment"
+        android:name="com.engin.eagerbeaver.presentation.main.my_adverts.AdvertsFragment"
+        android:label="fragment_adverts"
+        tools:layout="@layout/fragment_adverts" >
+        <action
+            android:id="@+id/action_advertsFragment_to_advertDetailFragment"
+            app:destination="@id/advertDetailFragment" />
+        <argument
+            android:name="isRefresh"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/advertDetailFragment"
+        android:name="com.engin.eagerbeaver.presentation.main.advert_detail.AdvertDetailFragment"
+        android:label="AdvertDetailFragment" >
+        <argument
+            android:name="advert_id"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <action
+            android:id="@+id/action_advertDetailFragment_to_advertsFragment"
+            app:destination="@id/advertsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

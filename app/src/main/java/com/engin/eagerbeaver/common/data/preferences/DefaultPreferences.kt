@@ -1,10 +1,10 @@
 package com.engin.eagerbeaver.common.data.preferences
 
 import android.content.SharedPreferences
+import com.engin.eagerbeaver.common.domain.model.ApplicantUser
+import com.engin.eagerbeaver.common.domain.model.EmployeeUser
 import com.engin.eagerbeaver.common.domain.model.UserRole
 import com.engin.eagerbeaver.common.domain.preferences.Preferences
-import com.engin.eagerbeaver.domain.auth.model.ApplicantUser
-import com.engin.eagerbeaver.domain.auth.model.EmployerUser
 import com.google.gson.Gson
 import javax.inject.Inject
 
@@ -12,13 +12,13 @@ class DefaultPreferences @Inject constructor(
     private val gson: Gson,
     private val sharedPref: SharedPreferences
 ):Preferences {
-    override fun saveEmployerUser(user: EmployerUser) {
+    override fun saveEmployeeUser(user: EmployeeUser) {
         sharedPref.edit().putString(Preferences.KEY_EMPLOYER_USER, Gson().toJson(user)).apply()
     }
 
-    override fun loadEmployerUser(): EmployerUser {
+    override fun loadEmployerUser(): EmployeeUser {
         val json = sharedPref.getString(Preferences.KEY_EMPLOYER_USER, "")
-        return gson.fromJson(json, EmployerUser::class.java)
+        return gson.fromJson(json, EmployeeUser::class.java)
     }
 
     override fun saveLogin(isLogin: Boolean) {
@@ -47,10 +47,20 @@ class DefaultPreferences @Inject constructor(
         return gson.fromJson(json, ApplicantUser::class.java)
     }
 
+    override fun saveUserID(id: Long) {
+        sharedPref.edit().putLong(Preferences.KEY_USER_ID,id).apply()
+    }
+
+    override fun getUserID(): Long {
+        return sharedPref.getLong(Preferences.KEY_USER_ID,0L)
+    }
+
     override fun removeUser() {
         sharedPref.edit().remove(Preferences.KEY_USER_TYPE).apply()
         sharedPref.edit().remove(Preferences.KEY_APPLICANT_USER).apply()
         sharedPref.edit().remove(Preferences.KEY_EMPLOYER_USER).apply()
         saveLogin(false)
     }
+
+
 }

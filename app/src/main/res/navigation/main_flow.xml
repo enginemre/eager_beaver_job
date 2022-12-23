@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_flow"
     app:startDestination="@id/home_fragment">
+    <include app:graph="@navigation/advert_flow"/>
 
     <include app:graph="@navigation/applicant_flow"/>
     <fragment

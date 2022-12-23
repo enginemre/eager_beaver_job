@@ -55,20 +55,28 @@
     <string name="introduction_string">İş arayan iş veren olun hep bizimle olun...</string>
     <string name="my_applicant">Başvurularım</string>
     <string name="toolbar_app_name">Eager Beaver Job</string>
+    <string name="my_adverts">İş İlanlarım</string>
+    <string name="splash_name">Eager Beaver Job</string>
+    <string name="add_advert">İş ilanı oluştur.</string>
+    <string name="delete_advert">Sil</string>
+    <string name="title_user">İş Ünvanı</string>
+    <string name="logout">Çıkış</string>
+    <string name="error_timeout">İstek zaman aşımına uğradı tekrar deneyiniz</string>
+    <string name="error_internet">"İnternet bağlanıtınız kontrol ediniz "</string>
 
     <string-array name="job_types">
-        <item>İş tipi seçiniz</item>
         <item>Tam Zamanlı</item>
         <item>Yarı Zamanlı</item>
-        <item>Staj</item>
+        <item>Stajer</item>
         <item>Uzaktan</item>
+        <item>Hibrit</item>
     </string-array>
 
     <string-array name="job_positions">
-        <item>Pozisyon seçiniz</item>
-        <item>Junior</item>
-        <item>Senior</item>
+        <item>Tecrübeli</item>
+        <item>Mezun</item>
+        <item>Çaylak</item>
         <item>Middle</item>
-        <item>Stajer</item>
+        <item>Kıdemli</item>
     </string-array>
 </resources>

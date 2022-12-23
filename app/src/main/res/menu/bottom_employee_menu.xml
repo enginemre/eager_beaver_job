@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/main_flow"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home"/>
+    <item
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/ic_work"
+        android:title="@string/find_work"/>
+
+    <item
+        android:id="@+id/advert_flow"
+        android:icon="@drawable/ic_baseline_work_outline_24"
+        android:title="@string/my_adverts"/>
+
+</menu>

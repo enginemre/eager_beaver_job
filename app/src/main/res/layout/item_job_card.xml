@@ -43,8 +43,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/job_advert"
             app:layout_constraintVertical_bias="0.5"
-            app:loadFromUrl="@{advert.companyImageUrl}"
-            tools:srcCompat="@tools:sample/avatars" />
+            app:loadFromUrl="@{advert.companyImageUrl}" />
 
         <TextView
             android:id="@+id/company_name"

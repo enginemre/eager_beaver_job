@@ -8,7 +8,7 @@ import com.engin.eagerbeaver.common.domain.model.UserRole
 
 class ValidateRegisterUser() {
 
-    operator fun invoke(name:String,email:String,password:String,userName:String,userType: UserRole) :ValidateRegisterUserResult{
+    operator fun invoke(name:String,email:String,password:String,userName:String) :ValidateRegisterUserResult{
         return if(name.isNotBlank() && password.isNotBlank() && userName.isNotBlank() && email.isNotBlank()){
             if(password.length >= 6){
               if(isValidEmail(email.trim())){

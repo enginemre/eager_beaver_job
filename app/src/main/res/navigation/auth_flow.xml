@@ -25,6 +25,10 @@
         <action
             android:id="@+id/action_registerFragment_to_home_graph"
             app:destination="@id/main_flow" />
+        <argument
+            android:name="infoGoogle"
+            app:argType="com.engin.eagerbeaver.common.domain.model.GoogleUserInfo"
+            app:nullable="true" />
     </fragment>
 
 

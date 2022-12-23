@@ -26,19 +26,19 @@ class JobDetailFragment : Fragment(), MenuProvider {
     private var  _binding: FragmentJobDetailBinding? = null
     private val binding get() =  _binding!!
     private val viewModel:JobDetailViewModel by viewModels()
-    private lateinit var comingFrom: Route?
+    private  var comingFrom: Route? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             comingFrom = if( it.getString("comingFrom") == "/home" && it.getString("comingFrom") != null) Route.Home() else Route.Jobs()
         }
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            goBack(comingFrom!!)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            goBack(comingFrom)
         }
     }
 
-    private fun goBack(comingFrom:Route) {
+    private fun goBack(comingFrom:Route?) {
         if(comingFrom is Route.Jobs){
             val action = JobDetailFragmentDirections.actionJobDetailFragmentSearchToSearchFragment(0L)
             findNavController().navigate(action)
@@ -101,6 +101,12 @@ class JobDetailFragment : Fragment(), MenuProvider {
                     ).show()
                     viewModel.messageShown()
                 }
+                currentState.route?.let {route ->
+                    if(route is Route.Home){
+                        goBack(comingFrom)
+                        viewModel.navigated()
+                    }
+                }
 
             }
         }
@@ -116,7 +122,7 @@ class JobDetailFragment : Fragment(), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             android.R.id.home -> {
-                goBack()
+                goBack(comingFrom)
                 true
             }
             else -> false

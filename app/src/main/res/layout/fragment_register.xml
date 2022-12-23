@@ -55,19 +55,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
-            <xyz.teamgravity.imageradiobutton.GravityImageRadioButton
-                android:id="@+id/employer_type"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="20dp"
-                app:girbImage="@drawable/ic_applicant"
-                app:girbPressedBackgroundDrawable="@color/white"
-                app:girbPressedImageTint="@color/Teal700"
-                app:girbPressedTextColor="@color/Teal700"
-                app:girbText="@string/employer"
-                app:girbUnpressedImageTint="@android:color/darker_gray"
-                app:girbUnpressedTextColor="@android:color/darker_gray" />
+
 
             <xyz.teamgravity.imageradiobutton.GravityImageRadioButton
                 android:id="@+id/applicant_type"
@@ -83,6 +71,19 @@
                 app:girbUnpressedImageTint="@android:color/darker_gray"
                 app:girbUnpressedTextColor="@android:color/darker_gray" />
 
+            <xyz.teamgravity.imageradiobutton.GravityImageRadioButton
+                android:id="@+id/employer_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="20dp"
+                app:girbImage="@drawable/ic_applicant"
+                app:girbPressedBackgroundDrawable="@color/white"
+                app:girbPressedImageTint="@color/Teal700"
+                app:girbPressedTextColor="@color/Teal700"
+                app:girbText="@string/employer"
+                app:girbUnpressedImageTint="@android:color/darker_gray"
+                app:girbUnpressedTextColor="@android:color/darker_gray" />
 
         </xyz.teamgravity.imageradiobutton.GravityRadioGroup>
 
@@ -154,12 +155,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+
+            android:layout_marginVertical="@dimen/default_padding_xlarge"
             android:layout_marginEnd="32dp"
-            android:layout_marginTop="@dimen/default_padding_xlarge"
             android:hint="@string/email_label"
             android:labelFor="@id/email_register"
             app:hintAnimationEnabled="false"
-            app:layout_constraintBottom_toTopOf="@+id/register_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -209,6 +210,249 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
+        <LinearLayout
+            android:id="@+id/applicant_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:visibility="visible"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/register_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
+            app:layout_constraintWidth_max="400dp">
+
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="İlgi Alanları"
+                android:textSize="@dimen/main_title_medium"
+                android:textStyle="bold" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="@dimen/default_padding"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/it_int"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <TextView
+                    android:layout_marginStart="@dimen/default_padding_xsmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/main_text"
+                    android:text="Bilgi Teknolokileri" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="@dimen/default_padding"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/ui_int"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/default_padding_xsmall"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/main_text"
+                    android:text=" Ui Ux Tasarım" />
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="@dimen/default_padding"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/hr_int"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/default_padding_xsmall"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/main_text"
+                    android:text=" İnsan Kaynakları" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="@dimen/default_padding"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/clean_int"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/default_padding_xsmall"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/main_text"
+                    android:text="Temizlik" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="@dimen/default_padding"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/selling_int"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/default_padding_xsmall"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/main_text"
+                    android:text=" Satın Alma" />
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="@dimen/default_padding"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/marketing_int"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/default_padding_xsmall"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/main_text"
+                    android:text=" Pazarlama" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                    android:layout_marginHorizontal="@dimen/default_padding"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/nakliyat_int"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/default_padding_xsmall"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/main_text"
+                    android:text=" Nakliyat" />
+
+
+            </LinearLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/description_register_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_padding"
+                android:layout_marginTop="@dimen/default_padding_xlarge"
+                android:hint="@string/description"
+                android:labelFor="@id/name_register"
+                app:layout_constraintWidth_max="400dp"
+                app:startIconDrawable="@drawable/ic_bookmark_selected"
+                app:startIconTint="@drawable/focus_change">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/description_register"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription=""
+                    android:imeOptions="actionNext"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/title_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_padding"
+                android:layout_marginVertical="@dimen/default_padding_xlarge"
+                android:hint="@string/title_user"
+                android:labelFor="@id/title_register"
+                app:layout_constraintWidth_max="400dp"
+                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:startIconTint="@drawable/focus_change">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/title_register"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription=""
+                    android:imeOptions="actionNext"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/register_button"
             style="@style/ShapeAppearanceOverlay.Material3.Button"
@@ -216,14 +460,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginTop="@dimen/default_padding_xlarge"
+            android:layout_marginVertical="@dimen/default_padding_large"
             android:text="@string/register"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
+            app:layout_constraintTop_toBottomOf="@+id/applicant_layout"
             app:layout_constraintWidth_max="400dp" />
 
 

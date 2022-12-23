@@ -168,7 +168,7 @@
                     android:layout_marginTop="12dp"
                     android:layout_weight="8"
                     android:gravity="center"
-                    android:text="@{job.type}"
+                    android:text="@{job.type.fromType()}"
                     android:textSize="@dimen/main_text"
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="192dp"
@@ -202,7 +202,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:gravity="center"
-                    android:text="@{job.position}"
+                    android:text="@{job.position.fromPosition()}"
                     android:textSize="@dimen/main_text"
                     android:textStyle="bold" />
             </LinearLayout>

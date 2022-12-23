@@ -11,14 +11,20 @@ import androidx.navigation.ui.setupWithNavController
 import com.engin.eagerbeaver.R
 import com.engin.eagerbeaver.common.CustomSnackBar
 import com.engin.eagerbeaver.common.SnackType
+import com.engin.eagerbeaver.common.domain.model.UserRole
+import com.engin.eagerbeaver.common.domain.preferences.Preferences
 import com.engin.eagerbeaver.databinding.ActivityMainBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var preferences: Preferences
 
     private lateinit var binding:ActivityMainBinding
     private lateinit var navController: NavController
@@ -37,28 +43,25 @@ class MainActivity : AppCompatActivity() {
     private fun init(){
         val navHostFragment  = supportFragmentManager.findFragmentById(R.id.nav_host_main) as NavHostFragment
         navController = navHostFragment.navController
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.searchFragment,R.id.applicantFragment,R.id.profile_fragment,R.id.home_fragment))
+        // TODO for employee menu
+        if(preferences.userType() == UserRole.EMPLOYEE){
+            binding.bottomNavigationView.menu.clear()
+            binding.bottomNavigationView.inflateMenu(R.menu.bottom_employee_menu)
+            appBarConfiguration = AppBarConfiguration(setOf(R.id.searchFragment,R.id.advertsFragment,R.id.home_fragment))
+        }else{
+            appBarConfiguration = AppBarConfiguration(setOf(R.id.searchFragment,R.id.applicantFragment,R.id.profile_fragment,R.id.home_fragment))
+        }
         setSupportActionBar(binding.toolbarLayout)
         setupActionBarWithNavController(navController,appBarConfiguration)
         binding.bottomNavigationView.setupWithNavController(navController)
-        supportActionBar?.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setDisplayShowHomeEnabled(true)
-        }
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(this,gso)
         val accnt = GoogleSignIn.getLastSignedInAccount(this)
         if(accnt != null){
-            CustomSnackBar.make(applicationContext,binding.root,accnt.email.toString(), SnackType.ERROR).show()
-        }
-        destinationListener()
-    }
-
-    private fun destinationListener() {
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-
+            CustomSnackBar.make(applicationContext,binding.root,accnt.email.toString(), SnackType.WARNING).show()
         }
     }
+
 
 
 

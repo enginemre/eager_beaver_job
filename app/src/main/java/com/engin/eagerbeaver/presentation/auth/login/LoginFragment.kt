@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.engin.eagerbeaver.R
 import com.engin.eagerbeaver.common.CustomSnackBar
 import com.engin.eagerbeaver.common.SnackType
+import com.engin.eagerbeaver.common.domain.model.GoogleUserInfo
 import com.engin.eagerbeaver.common.presentation.component.LoadingDialog
 import com.engin.eagerbeaver.common.presentation.util.Route
 import com.engin.eagerbeaver.databinding.FragmentLoginBinding
@@ -31,26 +32,37 @@ class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private lateinit var gso:GoogleSignInOptions
-    private lateinit var gsc:GoogleSignInClient
+    private lateinit var gso: GoogleSignInOptions
+    private lateinit var gsc: GoogleSignInClient
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var authActivityResultLauncher: ActivityResultLauncher<Intent>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
-        gsc = GoogleSignIn.getClient(requireActivity(),gso)
-        authActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-            if(result.resultCode ==Activity.RESULT_OK){
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                try {
-                    task.getResult(ApiException::class.java)
-                    startActivity(Intent(requireActivity(),MainActivity::class.java))
-                    requireActivity().finish()
-                }catch (ex:Exception){
-                    CustomSnackBar.make(requireContext(),requireView(),ex.message.toString(),SnackType.ERROR).show()
+        gso =
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+        gsc = GoogleSignIn.getClient(requireActivity(), gso)
+        authActivityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                    try {
+                        task.getResult(ApiException::class.java)
+                        val account = task.result
+                        account.email?.let {
+                            viewModel.checkEmailExist(it)
+                        }
+                        // the email exist
+
+                    } catch (ex: Exception) {
+                        CustomSnackBar.make(
+                            requireContext(),
+                            requireView(),
+                            ex.message.toString(),
+                            SnackType.ERROR
+                        ).show()
+                    }
                 }
             }
-        }
     }
 
     override fun onCreateView(
@@ -63,7 +75,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(viewModel.isLogin()){
+        if (viewModel.isLogin()) {
             goNextScreen(Route.Home())
         }
         binding.loginButton.setOnClickListener {
@@ -72,8 +84,11 @@ class LoginFragment : Fragment() {
                 binding.passwordTextInput.text.toString()
             )
         }
+        binding.loginWithGuest.setOnClickListener {
+            viewModel.loginAsGuest()
+        }
         binding.signInButton.setOnClickListener {
-            signIn()
+            signInGoogle()
         }
         binding.registerNow.setOnClickListener {
             goNextScreen(Route.Register())
@@ -81,16 +96,15 @@ class LoginFragment : Fragment() {
         observeData()
     }
 
-    private fun signIn(){
+    private fun signInGoogle() {
         val signInIntent: Intent = gsc.signInIntent
         authActivityResultLauncher.launch(signInIntent)
-        startActivityForResult(signInIntent, 1000)
     }
 
     private fun observeData() {
         lifecycleScope.launchWhenStarted {
             viewModel.state.collect { currentState ->
-                if (currentState.isLogin) {
+                if (currentState.isLoading) {
                     LoadingDialog.showLoading(requireContext(), false)
                     return@collect
                 } else {
@@ -105,25 +119,59 @@ class LoginFragment : Fragment() {
                     ).show()
                     viewModel.messageShown()
                 }
-                if (currentState.navigateNext)
-                    goNextScreen(Route.Home())
+                currentState.navigateNext?.let { route ->
+                    when (route) {
+                        is Route.Home -> {
+                            goNextScreen(Route.Home())
+                        }
+                        is Route.Register -> {
+                            goNextScreen(Route.Register())
+                        }
+                        else -> {}
+                    }
+                }
+                currentState.isDataAvailable?.let { result ->
+                    if (!result) {
+                        CustomSnackBar.make(
+                            requireContext(),
+                            requireView(),
+                            "Mevcut email ile ilgili kayıt bulunmamaktadır. Lütfen önce kayıt olunuz ",
+                            SnackType.ERROR
+                        ).show()
+                    } else {
+                        startActivity(Intent(requireActivity(), MainActivity::class.java))
+                        requireActivity().overridePendingTransition(
+                            R.anim.slide_in_left,
+                            R.anim.slide_out_left
+                        )
+                        requireActivity().finish()
+                    }
+                    viewModel.clearData()
+                }
+
+
             }
         }
     }
 
-    private fun goNextScreen(route: Route) {
+    private fun goNextScreen(route: Route, data: GoogleUserInfo? = null) {
         when (route) {
             Route.Home() -> {
                 val intent = Intent(requireActivity(), MainActivity::class.java)
                 startActivity(intent)
-                requireActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left)
+                requireActivity().overridePendingTransition(
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_left
+                )
                 requireActivity().finish()
             }
             Route.Register() -> {
-                val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+                val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment(data)
                 findNavController().navigate(action)
-            }else -> {}
+            }
+            else -> {}
         }
+        viewModel.navigated()
     }
 
     override fun onDestroyView() {
@@ -131,11 +179,5 @@ class LoginFragment : Fragment() {
         _binding = null
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 1000){
-
-        }
-    }
 
 }

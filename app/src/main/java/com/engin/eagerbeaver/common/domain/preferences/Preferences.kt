@@ -1,14 +1,14 @@
 package com.engin.eagerbeaver.common.domain.preferences
 
+import com.engin.eagerbeaver.common.domain.model.ApplicantUser
+import com.engin.eagerbeaver.common.domain.model.EmployeeUser
 import com.engin.eagerbeaver.common.domain.model.UserRole
-import com.engin.eagerbeaver.domain.auth.model.ApplicantUser
-import com.engin.eagerbeaver.domain.auth.model.EmployerUser
 
 interface Preferences {
 
-    fun saveEmployerUser(user: EmployerUser)
+    fun saveEmployeeUser(user: EmployeeUser)
 
-    fun loadEmployerUser(): EmployerUser
+    fun loadEmployerUser(): EmployeeUser
 
     fun saveLogin(isLogin: Boolean)
 
@@ -22,6 +22,9 @@ interface Preferences {
 
     fun loadApplicantUser(): ApplicantUser
 
+    fun saveUserID(id:Long)
+
+    fun getUserID() : Long
 
     fun removeUser()
 
@@ -31,5 +34,6 @@ interface Preferences {
         const val KEY_USER_TYPE = "userType"
         const val KEY_APPLICANT_USER = "applicantUser"
         const val KEY_EMPLOYER_USER = "employerUser"
+        const val KEY_USER_ID = "userId"
     }
 }

@@ -37,24 +37,23 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:hint="@string/user_name"
+        android:hint="@string/email_label"
         app:layout_constraintBottom_toTopOf="@+id/passwordTextLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
         app:layout_constraintWidth_max="400dp"
-        app:startIconDrawable="@drawable/ic_baseline_person_24"
+        app:startIconDrawable="@drawable/ic_mail"
         app:startIconTint="@drawable/focus_change">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userTextInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/user_name"
+            android:contentDescription="@string/email_label"
             android:imeOptions="actionNext"
-            android:inputType="text"
-            android:maxLength="10"
+            android:inputType="textEmailAddress"
             android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>

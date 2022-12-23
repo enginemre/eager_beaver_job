@@ -1,15 +1,18 @@
 package com.engin.eagerbeaver.presentation.auth.register
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.engin.eagerbeaver.common.CustomSnackBar
+import com.engin.eagerbeaver.common.domain.model.ApplicantUser
 import com.engin.eagerbeaver.common.domain.model.UserRole
 import com.engin.eagerbeaver.common.domain.preferences.Preferences
-import com.engin.eagerbeaver.domain.auth.model.ApplicantUser
+import com.engin.eagerbeaver.common.domain.util.Resource
+import com.engin.eagerbeaver.common.presentation.util.UiText
 import com.engin.eagerbeaver.domain.auth.usecase.RegisterUseCases
 import com.engin.eagerbeaver.domain.auth.usecase.ValidateRegisterUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +24,8 @@ class RegisterViewModel @Inject constructor(
     private var _state = MutableStateFlow(RegisterState())
      val state = _state.asStateFlow()
 
+    private var registerJob : Job? = null
+
 
     fun messageShown() {
         _state.update {
@@ -30,8 +35,8 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun registerUserValid(name:String,userName:String,password:String,email:String,type: UserRole){
-        when(val resultUserRegister = useCases.validateRegisterUser(name,email,password,userName,type)){
+    fun registerUserValid(name:String,userName:String,password:String,email:String,type: UserRole,interestId:List<Long>? = null,description:String? =null,title :String? =null){
+        when(val resultUserRegister = useCases.validateRegisterUser(name,email,password,userName)){
             is ValidateRegisterUser.ValidateRegisterUserResult.Error -> {
                 _state.update {
                     it.copy(
@@ -40,32 +45,49 @@ class RegisterViewModel @Inject constructor(
                 }
             }
             is ValidateRegisterUser.ValidateRegisterUserResult.Success -> {
-                _state.update {
-                    it.copy(
-                        nextPage = true,
-                    )
-                }
+                registerJob?.cancel()
+                registerJob = useCases.registerUserUseCase(name, userName, password, email, type,interestId, description, title).onEach {  resource->
+                    when(resource){
+                        is Resource.Error -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    errorMessage = resource.message
+                                )
+                            }
+                        }
+                        is Resource.Loading -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = true
+                                )
+                            }
+                        }
+                        is Resource.Success -> {
+                           resource.data?.let { result->
+                               if(result.message.isNotEmpty()){
+                                   _state.update {
+                                       it.copy(
+                                           isLoading = false,
+                                           nextPage = true
+                                       )
+                                   }
+                               }else{
+                                   _state.update {
+                                       it.copy(
+                                           isLoading = false,
+                                           errorMessage = UiText.DynamicString("Bir Hata oluştu")
+                                       )
+                                   }
+                               }
+                           }
+                        }
+                    }
+                }.launchIn(viewModelScope)
             }
         }
     }
-    private fun saveUser(name:String,userName:String,password:String,email:String,type: UserRole,job:String){
-        val user = ApplicantUser(
-            name,email,userName,type,job
-        )
-        preferences.saveLogin(true)
-        preferences.saveApplicantUser(user)
-        preferences.saveUserType(type)
-    }
 
-    private fun registerUser(){
-        goNextPage()
-    }
 
-    private fun goNextPage(){
-        _state.update {
-            it.copy(
-                nextPage = true,
-            )
-        }
-    }
+
 }

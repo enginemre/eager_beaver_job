@@ -1,74 +1,119 @@
 package com.engin.eagerbeaver.presentation.main.home.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.engin.eagerbeaver.common.domain.model.Category
-import com.engin.eagerbeaver.common.domain.model.JobAdvert
-import com.engin.eagerbeaver.common.domain.model.UserRole
+import androidx.lifecycle.viewModelScope
+import com.engin.eagerbeaver.common.domain.model.*
+import com.engin.eagerbeaver.common.domain.util.Resource
 import com.engin.eagerbeaver.common.presentation.util.Route
-import com.engin.eagerbeaver.domain.auth.model.EmployerUser
+import com.engin.eagerbeaver.domain.main.usecase.HomeUseCases
 import com.engin.eagerbeaver.presentation.main.home.HomeState
 import com.engin.eagerbeaver.presentation.main.home.components.CategoryCardListener
 import com.engin.eagerbeaver.presentation.main.home.components.JobCardListener
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val useCases: HomeUseCases
 ) : ViewModel(){
 
     private var _state:MutableStateFlow<HomeState> = MutableStateFlow(HomeState())
     val state:StateFlow<HomeState> = _state.asStateFlow()
 
+    private var getCategoryJob: Job? =null
+    private var getJobs:Job?= null
 
     init {
         getCategories()
         getLastJobs()
     }
 
-
     private fun getCategories(){
-        _state.update {
-            it.copy(
-                isLoading = true,
-            )
-        }
-        val listOfCategories = listOf<Category>(
+        getCategoryJob?.cancel()
+        getCategoryJob = useCases.getCategoriesUseCase().onEach {resource ->
+            when(resource){
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = resource.message
+                        )
+                    }
+                }
+                is Resource.Loading -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
+                is Resource.Success -> {
+                    resource.data?.let {data->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                categories =data
+                            )
+                        }
+                    }
+                }
+            }
+        }.launchIn(viewModelScope)
+
+      /*val listOfCategories = listOf<Category>(
             Category("Bilgi Teknolojileri",1L,"https://cdn-icons-png.flaticon.com/512/6062/6062646.png"),
             Category("UI/UX Tasarım",2L,"https://cdn-icons-png.flaticon.com/512/1055/1055666.png"),
             Category("Temilik",3L,"https://cdn-icons-png.flaticon.com/512/2954/2954884.png"),
             Category("İnsan Kaynakları",4L,"https://cdn-icons-png.flaticon.com/512/4490/4490380.png"),
             Category("Pazarlama",4L,"https://cdn-icons-png.flaticon.com/512/4490/4490380.png"),
             Category("Nakliyat",4L,"https://cdn-icons-png.flaticon.com/512/4196/4196451.png"),
-        )
-        _state.update {
-            it.copy(
-                isLoading = false,
-                categories = listOfCategories
-            )
-        }
+        )*/
     }
 
     private fun getLastJobs(){
-        _state.update {
-            it.copy(
-                isLoading = true,
-            )
-        }
-        val users = listOf<EmployerUser>(
-            EmployerUser(name = "Apple","apple@gmail.com","apple_cmp",UserRole.EMPLOYER, age = 23),
-            EmployerUser(name = "Goolge","goolge@gmail.com","goolge_cmp",UserRole.EMPLOYER, age = 43),
+        getJobs?.cancel()
+        getJobs = useCases.getJobsWithCategoryId(2).onEach { resource ->
+            when(resource){
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = resource.message
+                        )
+                    }
+                }
+                is Resource.Loading -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
+                is Resource.Success -> {
+                    resource.data?.let {data->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                lastAdverts =data
+                            )
+                        }
+                    }
+                }
+            }
+        }.launchIn(viewModelScope)
+       /* val users = listOf<EmployeeUser>(
+            EmployeeUser(name = "Apple","apple@gmail.com","apple_cmp",UserRole.EMPLOYEE),
+            EmployeeUser(name = "Goolge","goolge@gmail.com","goolge_cmp",UserRole.EMPLOYEE),
         )
         val listOfJobs = listOf<JobAdvert>(
             JobAdvert(
                 users[0],
                 "iOS Developer",
-                "Senior",
-                type = "Full-Time",
+                JobPosition.Senior,
+                type = JobType.FullTime,
                 Category("Bilgi Teknolojileri",1L,"https://cdn-icons-png.flaticon.com/512/6062/6062646.png"),
                 salary = 12600,
                 description = "A technology client is looking for a remote Android developer responsible for the development and maintenance of applications aimed at a vast number of diverse Android devices.\n" +
@@ -100,8 +145,8 @@ class HomeViewModel @Inject constructor(
             JobAdvert(
                 users[1],
                 "iOS Developer",
-                "Junior",
-                type = "Intern",
+                JobPosition.Junior,
+                type = JobType.Intern,
                 Category("Bilgi Teknolojileri",1L,"https://cdn-icons-png.flaticon.com/512/6062/6062646.png"),
                 salary = 12600,
                 description = "We are looking for Senior iOS and/or Android Developer working on our mobile\n" +
@@ -221,13 +266,7 @@ class HomeViewModel @Inject constructor(
                 companyImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_\"G\"_Logo.svg/2048px-Google_\"G\"_Logo.svg.png",
                 id = 2L
             )
-        )
-        _state.update {
-            it.copy(
-                isLoading = false,
-                lastAdverts = listOfJobs
-            )
-        }
+        )*/
     }
 
     fun messageShown() {

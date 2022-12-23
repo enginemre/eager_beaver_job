@@ -2,31 +2,36 @@ package com.engin.eagerbeaver.presentation.main.job_detail.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.engin.eagerbeaver.common.domain.model.Category
-import com.engin.eagerbeaver.common.domain.model.JobAdvert
-import com.engin.eagerbeaver.common.domain.model.UserRole
+import androidx.lifecycle.viewModelScope
+import com.engin.eagerbeaver.common.domain.model.*
 import com.engin.eagerbeaver.common.domain.preferences.Preferences
+import com.engin.eagerbeaver.common.domain.util.Resource
+import com.engin.eagerbeaver.common.presentation.util.Route
 import com.engin.eagerbeaver.common.presentation.util.UiText
-import com.engin.eagerbeaver.domain.auth.model.EmployerUser
+import com.engin.eagerbeaver.domain.main.usecase.GetJobInfoByIdUseCase
+import com.engin.eagerbeaver.domain.main.usecase.JobDetailUseCases
 import com.engin.eagerbeaver.presentation.main.job_detail.JobDetailState
 import com.engin.eagerbeaver.presentation.main.job_detail.component.JobDetailClicks
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class JobDetailViewModel @Inject constructor(
     private val preferences: Preferences,
-   private val savedStateHandle: SavedStateHandle
+   private val savedStateHandle: SavedStateHandle,
+   private val jobDetailUseCases: JobDetailUseCases
 ) : ViewModel(),JobDetailClicks{
 
     private var _state:MutableStateFlow<JobDetailState> = MutableStateFlow(JobDetailState())
     var state:StateFlow<JobDetailState> = _state.asStateFlow()
     private val advertId:Long? = savedStateHandle["job_id"]
+
+
+    private var getJobAdvertJob : Job? = null
+    private var applyJobAdvertJob: Job? = null
 
     init {
         getJobDetail(advertId)
@@ -34,14 +39,44 @@ class JobDetailViewModel @Inject constructor(
 
     private fun getJobDetail(advertId: Long?) {
         if(advertId !=null){
-            val advert:JobAdvert
+            getJobAdvertJob?.cancel()
+            getJobAdvertJob = jobDetailUseCases.getJobInfoByIdUseCase(advertId).onEach {resource->
+                when(resource){
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessage = resource.message
+                            )
+                        }
+                    }
+                    is Resource.Loading -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
+                    is Resource.Success -> {
+                        resource.data?.let {data->
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    jobDetail =data
+                                )
+                            }
+                        }
+                    }
+                }
+            }.launchIn(viewModelScope)
+           /* val advert:JobAdvert
             if(advertId == 1L){
                 advert = JobAdvert(
-                    EmployerUser(name = "Apple","apple@gmail.com","apple_cmp",
-                        UserRole.EMPLOYER, age = 23),
+                    EmployeeUser(name = "Apple","apple@gmail.com","apple_cmp",
+                        UserRole.EMPLOYEE),
                     "iOS Developer",
-                    "Senior",
-                    type = "Full-Time",
+                    JobPosition.Senior,
+                    type = JobType.FullTime,
                     Category("Bilgi Teknolojileri",1L,"https://cdn-icons-png.flaticon.com/512/6062/6062646.png"),
                     salary = 16400,
                     description = "A technology client is looking for a remote Android developer responsible for the development and maintenance of applications aimed at a vast number of diverse Android devices.\n" +
@@ -79,10 +114,10 @@ class JobDetailViewModel @Inject constructor(
             }
             else{
                 advert = JobAdvert(
-                    EmployerUser(name = "Goolge","goolge@gmail.com","goolge_cmp",UserRole.EMPLOYER, age = 43),
+                    EmployeeUser(name = "Goolge","goolge@gmail.com","goolge_cmp",UserRole.EMPLOYEE),
                     "iOS Developer",
-                    "Junior",
-                    type = "Intern",
+                    JobPosition.Junior,
+                    type = JobType.Intern,
                     Category("Bilgi Teknolojileri",1L,"https://cdn-icons-png.flaticon.com/512/6062/6062646.png"),
                     salary = 12600,
                     description = "We are looking for Senior iOS and/or Android Developer working on our mobile\n" +
@@ -209,7 +244,7 @@ class JobDetailViewModel @Inject constructor(
                     )
                 }
 
-            }
+            }*/
 
         }else{
             _state.update {
@@ -232,15 +267,49 @@ class JobDetailViewModel @Inject constructor(
     }
 
     private fun applyJob(job:JobAdvert){
-        _state.update {
-            it.copy(
-                warningMessage = UiText.DynamicString("Başvurulan İş ilanı ${job.title}")
-            )
-        }
+        applyJobAdvertJob?.cancel()
+        applyJobAdvertJob = jobDetailUseCases.applyJobUseCase(userId = preferences.getUserID(), jobId = job.id).onEach {resource->
+            when(resource){
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = resource.message
+                        )
+                    }
+                }
+                is Resource.Loading -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
+                is Resource.Success -> {
+                    resource.data?.let {_->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                route = Route.Home()
+                            )
+                        }
+                    }
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     override fun onJobApply(job: JobAdvert) {
         applyJob(job)
+    }
+
+
+    fun navigated(){
+        _state.update {
+            it.copy(
+                route = null
+            )
+        }
     }
 
     override fun onRetryError() {

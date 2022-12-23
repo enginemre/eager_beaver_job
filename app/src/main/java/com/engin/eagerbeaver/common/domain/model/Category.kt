@@ -7,4 +7,7 @@ data class Category(
     override val id: Long,
     val categoryImageUrl: String,
 ) : RecyclerViewItem {
+    override fun toString(): String {
+        return categoryName
+    }
 }
