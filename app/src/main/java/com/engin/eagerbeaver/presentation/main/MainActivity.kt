@@ -3,7 +3,9 @@ package com.engin.eagerbeaver.presentation.main
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.get
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -14,6 +16,7 @@ import com.engin.eagerbeaver.common.SnackType
 import com.engin.eagerbeaver.common.domain.model.UserRole
 import com.engin.eagerbeaver.common.domain.preferences.Preferences
 import com.engin.eagerbeaver.databinding.ActivityMainBinding
+import com.engin.eagerbeaver.presentation.main.home.HomeFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -26,10 +29,10 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var preferences: Preferences
 
-    private lateinit var binding:ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var gso:GoogleSignInOptions
+    private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,32 +43,68 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun init(){
-        val navHostFragment  = supportFragmentManager.findFragmentById(R.id.nav_host_main) as NavHostFragment
+    private fun init() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_main) as NavHostFragment
         navController = navHostFragment.navController
         // TODO for employee menu
-        if(preferences.userType() == UserRole.EMPLOYEE){
+        if (preferences.userType() == UserRole.EMPLOYEE) {
             binding.bottomNavigationView.menu.clear()
             binding.bottomNavigationView.inflateMenu(R.menu.bottom_employee_menu)
-            appBarConfiguration = AppBarConfiguration(setOf(R.id.searchFragment,R.id.advertsFragment,R.id.home_fragment))
-        }else{
-            appBarConfiguration = AppBarConfiguration(setOf(R.id.searchFragment,R.id.applicantFragment,R.id.profile_fragment,R.id.home_fragment))
+            appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.searchFragment,
+                    R.id.advertsFragment,
+                    R.id.home_fragment
+                )
+            )
+        } else {
+            appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.searchFragment,
+                    R.id.applicantFragment,
+                    R.id.profile_fragment,
+                    R.id.home_fragment
+                )
+            )
         }
         setSupportActionBar(binding.toolbarLayout)
-        setupActionBarWithNavController(navController,appBarConfiguration)
+        setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNavigationView.setupWithNavController(navController)
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
-        gsc = GoogleSignIn.getClient(this,gso)
+        gso =
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+        gsc = GoogleSignIn.getClient(this, gso)
         val accnt = GoogleSignIn.getLastSignedInAccount(this)
         /*if(accnt != null){
             CustomSnackBar.make(applicationContext,binding.root,accnt.email.toString(), SnackType.WARNING).show()
         }*/
+        binding.bottomNavigationView.setOnItemReselectedListener { menu ->
+            when (menu.itemId) {
+                R.id.main_flow -> {
+                    navController.popBackStack(R.id.home_fragment, false)
+                }
+                R.id.searchFragment -> {
+                    navController.popBackStack(R.id.searchFragment, false)
+                }
+                R.id.applicant_flow -> {
+                    navController.popBackStack(R.id.applicantFragment, false)
+                }
+                R.id.profile_fragment -> {
+                    navController.popBackStack(R.id.profile_fragment, false)
+                }
+                else -> {
+                    val destination = navController.graph[menu.itemId]
+                    val graph = destination as? NavGraph ?: return@setOnItemReselectedListener
+                    navController.popBackStack(graph.startDestinationId, false)
+                }
+
+            }
+
+        }
     }
 
 
-
-
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(appBarConfiguration)  || super.onSupportNavigateUp()
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

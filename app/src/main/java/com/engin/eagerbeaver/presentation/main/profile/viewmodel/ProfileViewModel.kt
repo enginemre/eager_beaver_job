@@ -32,47 +32,50 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getUserInfo() {
-        userInfoJob?.cancel()
-        userInfoJob = getUserInfoUseCase(preferences.getUserID()).onEach { resource ->
-            when(resource){
-                is Resource.Error -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = resource.message
-                        )
-                    }
-                }
-                is Resource.Loading -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = true
-                        )
-                    }
-                }
-                is Resource.Success -> {
-                    resource.data?.let {data->
+        if(preferences.getUserID() != 0L){
+            userInfoJob?.cancel()
+            userInfoJob = getUserInfoUseCase(preferences.getUserID()).onEach { resource ->
+                when(resource){
+                    is Resource.Error -> {
                         _state.update {
                             it.copy(
                                 isLoading = false,
-                                user =data
+                                errorMessage = resource.message
                             )
                         }
                     }
+                    is Resource.Loading -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
+                    is Resource.Success -> {
+                        resource.data?.let {data->
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    user =data
+                                )
+                            }
+                        }
+                    }
                 }
-            }
-        }.launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
+        }
     }
 
 
     fun editProfile(description:String,email:String,fullName:String,title:String,username:String){
-        editUserJob?.cancel()
-        editUserJob = updateProfileUseCase(userId = preferences.getUserID(),
-            description = description,
-            email = email,
-            fullName = fullName,
-            title = title,
-            username = username ).onEach { resource->
+        if(preferences.getUserID() != 0L){
+            editUserJob?.cancel()
+            editUserJob = updateProfileUseCase(userId = preferences.getUserID(),
+                description = description,
+                email = email,
+                fullName = fullName,
+                title = title,
+                username = username ).onEach { resource->
                 when(resource){
                     is Resource.Error -> {
                         _state.update {
@@ -109,7 +112,9 @@ class ProfileViewModel @Inject constructor(
                         }
                     }
                 }
-        }.launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
+        }
+
     }
 
     fun messageShown(){

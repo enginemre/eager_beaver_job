@@ -27,36 +27,40 @@ class ApplicantViewModel @Inject constructor(
     private var applicantJob: Job? = null
 
     private fun getMyApplicant(){
-        applicantJob?.cancel()
-        applicantJob = getAppliedJobsUseCase(preferences.getUserID()).onEach { resource->
-            when(resource){
-                is Resource.Error -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = resource.message
-                        )
-                    }
-                }
-                is Resource.Loading -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = true
-                        )
-                    }
-                }
-                is Resource.Success -> {
-                    resource.data?.let {data->
+        // passing guest
+        if(preferences.getUserID() != 0L){
+            applicantJob?.cancel()
+            applicantJob = getAppliedJobsUseCase(preferences.getUserID()).onEach { resource->
+                when(resource){
+                    is Resource.Error -> {
                         _state.update {
                             it.copy(
                                 isLoading = false,
-                                 myApplicant = data
+                                errorMessage = resource.message
                             )
                         }
                     }
+                    is Resource.Loading -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
+                    is Resource.Success -> {
+                        resource.data?.let {data->
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    myApplicant = data
+                                )
+                            }
+                        }
+                    }
                 }
-            }
-        }.launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
+        }
+
     }
 
     fun messageShown(){

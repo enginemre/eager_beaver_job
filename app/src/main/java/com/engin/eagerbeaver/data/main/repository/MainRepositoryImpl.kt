@@ -270,7 +270,7 @@ class MainRepositoryImpl @Inject constructor(
                 val result : SearchReturnDto
                 if(map.isEmpty()){
                     map[""] = ""
-                    result = mainApi.searchJob(map)
+                        result = mainApi.searchJob(map)
                 }else{
                      result  = mainApi.searchJob(map)
                 }

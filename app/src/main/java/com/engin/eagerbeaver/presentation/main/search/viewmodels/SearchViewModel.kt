@@ -24,7 +24,7 @@ class SearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val searchJobUseCase: SearchJobUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase
-) : ViewModel(),JobCardListener {
+) : ViewModel(),JobCardListener  {
 
     private var _state:MutableStateFlow<SearchState> = MutableStateFlow(SearchState())
     val state:StateFlow<SearchState> = _state.asStateFlow()
@@ -291,14 +291,22 @@ class SearchViewModel @Inject constructor(
     }
 
     fun applyFilter(type: String? =null, categoryId:Long? = null){
-        type?.let {
-            val filter = JobFilter(categoryId,it)
+        if(type == null){
+            val filter = JobFilter(categoryId,null)
+            _state.update { state->
+                state.copy(
+                    filter = filter
+                )
+            }
+        }else{
+            val filter = JobFilter(categoryId,type!!)
             _state.update { state->
                 state.copy(
                     filter = filter
                 )
             }
         }
+
     }
 
     fun clearFilter(){

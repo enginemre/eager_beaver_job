@@ -32,12 +32,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class SearchFragment : Fragment() , FilterClick {
+class SearchFragment : Fragment(), FilterClick {
 
     private var _binding: FragmentSearchBinding? = null
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var jobAdvertAdapter: JobAdvertAdapter
-    private lateinit var  navController:NavController
+    private lateinit var navController: NavController
     private var bottomSheetDialog: BottomSheetDialog? = null
     private lateinit var categoryAdapter: FilterAdapter
     val binding get() = _binding!!
@@ -82,25 +82,25 @@ class SearchFragment : Fragment() , FilterClick {
                         type = SnackType.ERROR
                     ).show()
                 }
-                if (currentState.jobsList.isNotEmpty())
-                    jobAdvertAdapter.updateData(currentState.jobsList)
-                currentState.shouldNavigate?.let { route->
-                    when(route){
+                jobAdvertAdapter.updateData(currentState.jobsList)
+                currentState.shouldNavigate?.let { route ->
+                    when (route) {
                         is Route.JobDetail -> {
-                            goJobDetail( route.jobId)
+                            goJobDetail(route.jobId)
                         }
-                        else->{}
+                        else -> {}
                     }
                 }
                 currentState.categoryList?.let {
-                   categoryAdapter.updateData(it.map { cat->
-                       FilterItem(cat,false,cat.id) })
+                    categoryAdapter.updateData(it.map { cat ->
+                        FilterItem(cat, false, cat.id)
+                    })
                 }
                 currentState.filter?.let {
-                    if(it.type == null){
+                    if (it.type == null) {
                         viewModel.getJobs(it.category_id)
-                    }else{
-                        viewModel.getJobs(it.category_id, JobType.toType(it.type!!) )
+                    } else {
+                        viewModel.getJobs(it.category_id, JobType.toType(it.type!!))
                     }
                     viewModel.clearFilter()
                 }
@@ -108,27 +108,30 @@ class SearchFragment : Fragment() , FilterClick {
         }
     }
 
-    private fun createFilterDialog(){
+    private fun createFilterDialog() {
         viewModel.getCategories()
         bottomSheetDialog = BottomSheetDialog(requireContext())
         val inflater = LayoutInflater.from(requireContext())
         val bindingSheet = FilterSheetBinding.inflate(inflater)
-        bindingSheet.filterCategoryRv.layoutManager = LinearLayoutManager(requireContext())
-        categoryAdapter =  FilterAdapter(viewModel.state.value.categoryList?.map { FilterItem(it,false,it.id) } ?: emptyList<FilterItem>(),this)
+        bindingSheet.filterCategoryRv.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        categoryAdapter =
+            FilterAdapter(viewModel.state.value.categoryList?.map { FilterItem(it, false, it.id) }
+                ?: emptyList<FilterItem>(), this)
         bottomSheetDialog?.setContentView(bindingSheet.root)
         bindingSheet.filterCategoryRv.adapter = categoryAdapter
         bindingSheet.filiterSearch.setOnClickListener {
-            val id =   bindingSheet.jobTypeRv.checkedRadioButtonId
-            val selectedType:String?
-            if (id != -1){
+            val id = bindingSheet.jobTypeRv.checkedRadioButtonId
+            val selectedType: String?
+            if (id != -1) {
                 val jobType = bindingSheet.root.findViewById<RadioButton>(id)
-                selectedType =  jobType.text.toString()
-            }else{
+                selectedType = jobType.text.toString()
+            } else {
                 selectedType = null
             }
             bottomSheetDialog?.hide()
             val selected = categoryAdapter.data.firstOrNull { it.selected }
-            viewModel.applyFilter(selectedType,selected?.id)
+            viewModel.applyFilter(selectedType, selected?.id)
         }
         bindingSheet.clearFilter.setOnClickListener {
             bottomSheetDialog?.hide()
@@ -139,14 +142,14 @@ class SearchFragment : Fragment() , FilterClick {
         bottomSheetDialog?.behavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun goJobDetail(jobId:Long) {
+    private fun goJobDetail(jobId: Long) {
         val bundle = bundleOf("job_id" to jobId)
-        navController.navigate(R.id.action_global_jobDetailFragment,bundle)
+        navController.navigate(R.id.action_global_jobDetailFragment, bundle)
     }
 
     private fun init() {
         navController = findNavController()
-        jobAdvertAdapter = JobAdvertAdapter(emptyList(),viewModel)
+        jobAdvertAdapter = JobAdvertAdapter(emptyList(), viewModel)
         binding.jobsSearchRv.adapter = jobAdvertAdapter
         binding.jobsSearchRv.layoutManager = LinearLayoutManager(requireContext())
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -161,7 +164,7 @@ class SearchFragment : Fragment() , FilterClick {
 
 
         })
-        binding.searchView.setOnCloseListener(object:SearchView.OnCloseListener{
+        binding.searchView.setOnCloseListener(object : SearchView.OnCloseListener {
             override fun onClose(): Boolean {
                 viewModel.getJobs(null)
                 return false
@@ -174,7 +177,7 @@ class SearchFragment : Fragment() , FilterClick {
     }
 
     override fun selectCategory(item: FilterItem) {
-        item.selected = true
+        item.selected = !item.selected
     }
 
 

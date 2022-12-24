@@ -19,3 +19,17 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.engin.eagerbeaver.data.auth.mapper.* { *; }
+-keep class com.engin.eagerbeaver.data.main.mapper.* { *; }
+-keep class com.engin.eagerbeaver.data.main.remote.dto.* { *; }
+-keep class com.engin.eagerbeaver.common.domain.model.* { *; }
+-keep class com.engin.eagerbeaver.data.main.remote.dto.* { *; }
+-keep class com.engin.eagerbeaver.data.auth.remote.dto.* { *; }
+-keep class com.engin.eagerbeaver.domain.auth.model.* { *; }
+-keep class com.engin.eagerbeaver.domain.main.model.* { *; }
+-keep class com.google.** { *; }
+-keep class com.github.** { *; }
+-keep class org.apache.** { *; }
+-keep class com.android.** { *; }
+-keep class junit.** { *; }

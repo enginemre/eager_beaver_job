@@ -9,13 +9,13 @@ import com.engin.eagerbeaver.presentation.main.search.component.FilterItem
 
 class FilterAdapter(
     private val list: List<FilterItem>,
-    private val listener:FilterClick
+    private val listenerMy:FilterClick
 ) : BaseAdapter<ItemFilterCategoryBinding, FilterItem>(list) {
     override val layoutId: Int = R.layout.item_filter_category
     override fun bind(binding: ItemFilterCategoryBinding, item: FilterItem) {
         binding.apply {
             filterItem = item
-            listener = listener
+            listener = listenerMy
             executePendingBindings()
         }
     }
