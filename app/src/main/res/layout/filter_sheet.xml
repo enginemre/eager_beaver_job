@@ -75,7 +75,7 @@
             app:layout_constraintTop_toBottomOf="@+id/filter_category_rv" />
 
 
-        <androidx.recyclerview.widget.RecyclerView
+        <RadioGroup
             android:id="@+id/job_type_rv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -86,10 +86,42 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/job_type"
-            app:layout_constraintWidth_max="400dp" />
+            app:layout_constraintWidth_max="400dp">
+
+            <RadioButton
+                android:id="@+id/radioButton1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hibrit" />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Uzaktan" />
+
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stajer" />
+
+            <RadioButton
+                android:id="@+id/radioButton4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Yarı Zamanlı"/>
+
+            <RadioButton
+                android:id="@+id/radioButton5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tam Zamanlı" />
+
+        </RadioGroup>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/filiter_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -103,7 +135,7 @@
             app:layout_constraintWidth_max="400dp" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/clear_filter"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -114,7 +146,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button2"
+            app:layout_constraintTop_toBottomOf="@+id/filiter_search"
             app:layout_constraintWidth_max="400dp" />
 
 

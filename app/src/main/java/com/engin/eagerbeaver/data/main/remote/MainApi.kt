@@ -1,5 +1,7 @@
 package com.engin.eagerbeaver.data.main.remote
 
+import com.engin.eagerbeaver.common.domain.model.JobType
+import com.engin.eagerbeaver.data.auth.remote.dto.Return
 import com.engin.eagerbeaver.data.main.remote.dto.*
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -17,7 +19,7 @@ interface MainApi {
     suspend fun getCategoryJobs(@Path("id") id:Long): JobsWithCategoryIdDto
 
     @GET("/api/get_applied_jobs/{id}/")
-    suspend fun getAppliedJobs(@Path("id") id:Long): AppiedJobsDto
+    suspend fun getAppliedJobs(@Path("id") id:Long): AppliedJobReturnDto
 
     @POST("/api/create_job/")
     suspend fun createJob(@Body body:CreateJobSenderDto) : CreateJobReturnDto
@@ -37,8 +39,11 @@ interface MainApi {
     @DELETE("/api/update_job/{id}/")
     suspend fun deleteMyAdvert(@Path("id") jobId:Long) : Response<ResponseBody>
 
-    @POST("/api/search_jobs/")
-    suspend fun searchJob(@Body body:SearchSenderDto) :SearchReturnDto
+    @GET("/api/search_jobs/")
+    suspend fun searchJob( @QueryMap map:Map<String,String>?) :SearchReturnDto
+
+    @PUT("accounts/update_profile/{id}/")
+    suspend fun updateProfile(@Path("id") userId: Long,@Body body:UpdateProfileSenderDto) : UpdateProfileReturnDto
 
 
 

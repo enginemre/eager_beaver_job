@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="filterItem"
+            type="com.engin.eagerbeaver.presentation.main.search.component.FilterItem" />
+
+        <variable
+            name="listener"
+            type="com.engin.eagerbeaver.presentation.main.search.component.FilterClick" />
+
+
+    </data>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="@{()-> listener.selectCategory(filterItem)}"
+        android:text="@{filterItem.data.categoryName}" />
+</LinearLayout>
+
+
+</layout>

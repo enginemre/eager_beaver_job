@@ -7,12 +7,14 @@ import com.engin.eagerbeaver.common.domain.model.JobAdvert
 import com.engin.eagerbeaver.common.domain.model.User
 import com.engin.eagerbeaver.common.domain.util.Resource
 import com.engin.eagerbeaver.common.presentation.util.UiText
+import com.engin.eagerbeaver.data.auth.remote.dto.Return
 import com.engin.eagerbeaver.data.main.mapper.*
 import com.engin.eagerbeaver.data.main.remote.MainApi
 import com.engin.eagerbeaver.data.main.remote.dto.*
 import com.engin.eagerbeaver.domain.main.repository.MainRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.internal.notify
 import java.io.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
@@ -150,9 +152,13 @@ class MainRepositoryImpl @Inject constructor(
             try {
                 emit(Resource.Loading())
                 val senderObject =
-                    ApplyJobSenderDto(applicant = jobId.toInt(), job = jobId.toInt())
+                    ApplyJobSenderDto(applicant = userId.toInt(), job = jobId.toInt())
                 val result = mainApi.applyJob(senderObject)
-                emit(Resource.Success(result.data.id >0))
+                if(result.errorMessage != null )
+                    emit(Resource.Error(UiText.DynamicString(result.errorMessage)))
+                else
+                    emit(Resource.Success(true))
+
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
                 emit(Resource.Error(UiText.StringResource(R.string.error_timeout)))
@@ -251,7 +257,23 @@ class MainRepositoryImpl @Inject constructor(
         return flow {
             try {
                 emit(Resource.Loading())
-                val result  = mainApi.searchJob(body)
+                val map = HashMap<String,String>()
+                body.categoryId?.let {
+                    map.put("category_id",it.toString())
+                }
+                body.jobType?.let {
+                    map.put("job_type",it)
+                }
+                body.title?.let {
+                    map.put("title",it)
+                }
+                val result : SearchReturnDto
+                if(map.isEmpty()){
+                    map[""] = ""
+                    result = mainApi.searchJob(map)
+                }else{
+                     result  = mainApi.searchJob(map)
+                }
                 emit(Resource.Success(result.data.map { it.toJobAdvert() }))
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
@@ -277,6 +299,31 @@ class MainRepositoryImpl @Inject constructor(
             try {
                 emit(Resource.Loading())
                 val result  = mainApi.createJob(body)
+                emit(Resource.Success(result))
+            } catch (e: SocketTimeoutException) {
+                e.printStackTrace()
+                emit(Resource.Error(UiText.StringResource(R.string.error_timeout)))
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error(UiText.StringResource(R.string.error_internet)))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(
+                    Resource.Error(
+                        UiText.DynamicString(
+                            e.localizedMessage ?: "Beklenmedik bir hata oluştu"
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    override fun updateProfile(userId: Long,body: UpdateProfileSenderDto): Flow<Resource<UpdateProfileReturnDto>> {
+        return flow {
+            try {
+                emit(Resource.Loading())
+                val result  = mainApi.updateProfile(userId,body)
                 emit(Resource.Success(result))
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()

@@ -5,7 +5,9 @@ import com.google.gson.annotations.SerializedName
 
 data class ApplyJobReturnDto(
     @SerializedName("data")
-    val `data`: DataAppiedJobDto,
+    val `data`: DataAppliedJobDto?,
     @SerializedName("job_image")
-    val jobİmage: String
+    val jobİmage: String?,
+    @SerializedName("error")
+    val errorMessage: String?
 )

@@ -5,6 +5,7 @@ import com.engin.eagerbeaver.common.domain.model.Category
 import com.engin.eagerbeaver.common.domain.model.JobAdvert
 import com.engin.eagerbeaver.common.domain.model.User
 import com.engin.eagerbeaver.common.domain.util.Resource
+import com.engin.eagerbeaver.data.auth.remote.dto.Return
 import com.engin.eagerbeaver.data.main.remote.dto.*
 import kotlinx.coroutines.flow.Flow
 
@@ -31,4 +32,6 @@ interface MainRepository {
     fun searchJob(body:SearchSenderDto) : Flow<Resource<List<JobAdvert>>>
 
     fun createJob(body: CreateJobSenderDto) :Flow<Resource<CreateJobReturnDto>>
+
+    fun updateProfile(userId: Long,body:UpdateProfileSenderDto) : Flow<Resource<UpdateProfileReturnDto>>
 }

@@ -16,11 +16,11 @@ data class DataProfileDto(
     @SerializedName("id")
     val id: Int,
     @SerializedName("image")
-    val image: String,
+    val image: String?,
     @SerializedName("interested_with")
     val interestedWith: List<InterestedWithDto>?,
     @SerializedName("title")
     val title: String?,
     @SerializedName("user")
-    val user:UserDto
+    val user:String
 )

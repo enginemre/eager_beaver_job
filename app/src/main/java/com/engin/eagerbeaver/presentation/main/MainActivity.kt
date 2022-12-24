@@ -57,9 +57,9 @@ class MainActivity : AppCompatActivity() {
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gsc = GoogleSignIn.getClient(this,gso)
         val accnt = GoogleSignIn.getLastSignedInAccount(this)
-        if(accnt != null){
+        /*if(accnt != null){
             CustomSnackBar.make(applicationContext,binding.root,accnt.email.toString(), SnackType.WARNING).show()
-        }
+        }*/
     }
 
 

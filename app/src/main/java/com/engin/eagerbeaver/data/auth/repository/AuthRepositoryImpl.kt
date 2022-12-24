@@ -59,11 +59,12 @@ class AuthRepositoryImpl @Inject constructor(
                     description = description ?: "",
                     email = email,
                     fullName = name,
-                    interestedWith = listOf<InterestedWithDto>(InterestedWithDto(id = 1)),
+                    interestedWith = listOf<InterestedWithDto>(InterestedWithDto(id = 2)),
                     password = password,
                     title = title ?: "",
                     userType = if (type.name.startsWith("A")) "Applicant" else "Employer",
-                    username = userName
+                    username = userName,
+                    birthDate = "2000-12-02"
                 )
                 val result = authApi.registerUser(body)
                 emit(Resource.Success(result))

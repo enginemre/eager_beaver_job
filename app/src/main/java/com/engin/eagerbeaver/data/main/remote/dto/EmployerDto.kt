@@ -13,5 +13,5 @@ data class EmployerDto(
     @SerializedName("image")
     val image: String,
     @SerializedName("user")
-    val user: UserDto
+    val user:UserDto
 )

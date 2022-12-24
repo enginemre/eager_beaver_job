@@ -13,7 +13,7 @@ data class UserDto(
     @SerializedName("id")
     val id: Int,
     @SerializedName("last_login")
-    val lastLogin: Any,
+    val lastLogin: String?,
     @SerializedName("last_name")
     val lastName: String,
     @SerializedName("username")

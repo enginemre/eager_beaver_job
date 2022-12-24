@@ -22,9 +22,7 @@
         android:name="com.engin.eagerbeaver.presentation.auth.register.RegisterFragment"
         android:label="Kayıt Ol"
         tools:layout="@layout/fragment_register">
-        <action
-            android:id="@+id/action_registerFragment_to_home_graph"
-            app:destination="@id/main_flow" />
+
         <argument
             android:name="infoGoogle"
             app:argType="com.engin.eagerbeaver.common.domain.model.GoogleUserInfo"

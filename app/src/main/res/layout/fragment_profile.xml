@@ -41,8 +41,8 @@
 
         <TextView
             android:id="@+id/profile_name"
-            android:layout_width="3dp"
-            android:layout_height="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@{user.name}"
             app:layout_constraintBottom_toTopOf="@+id/profile_title"
@@ -232,7 +232,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
-            android:hint="@string/birthdate"
+            android:hint="@string/title_user"
             android:labelFor="@id/birthdate_profile"
             app:layout_constraintBottom_toTopOf="@+id/description_profile_layout"
             app:layout_constraintEnd_toEndOf="parent"
@@ -240,14 +240,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email_profile_layout"
             app:layout_constraintWidth_max="400dp"
-            app:startIconDrawable="@drawable/ic_date"
+            app:startIconDrawable="@drawable/ic_baseline_person_24"
             app:startIconTint="@drawable/focus_change">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/birthdate_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(user.birthDate)}"
+                android:text="@{String.valueOf(user.title)}"
                 android:contentDescription=""
                 android:imeOptions="actionNext"
                 android:maxLines="1" />
@@ -305,6 +305,7 @@
 
 
             <ImageButton
+                android:id="@+id/cv_add_user"
                 style="@style/ShapeAppearanceOverlay.Material3.Button"
                 android:layout_width="wrap_content"
                 android:contentDescription="@string/upload_file"

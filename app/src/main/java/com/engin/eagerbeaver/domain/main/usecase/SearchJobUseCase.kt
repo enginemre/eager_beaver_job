@@ -11,10 +11,11 @@ import javax.inject.Inject
 class SearchJobUseCase @Inject constructor(
     private val mainRepository: MainRepository
 ) {
-    operator fun invoke(categoryId:Long?,jobType: JobType?): Flow<Resource<List<JobAdvert>>> {
+    operator fun invoke(categoryId:Long?,jobType: JobType?,title:String?): Flow<Resource<List<JobAdvert>>> {
         val searchSenderDto = SearchSenderDto(
             categoryId = categoryId?.toInt(),
-            jobType = jobType?.fromType()
+            jobType = jobType?.fromType(),
+            title = title
         )
         return mainRepository.searchJob(searchSenderDto)
     }

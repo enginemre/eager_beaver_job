@@ -7,6 +7,7 @@ import com.engin.eagerbeaver.common.domain.model.UserRole
 import com.engin.eagerbeaver.common.domain.preferences.Preferences
 import com.engin.eagerbeaver.common.domain.util.Resource
 import com.engin.eagerbeaver.common.presentation.util.Route
+import com.engin.eagerbeaver.common.presentation.util.UiText
 import com.engin.eagerbeaver.domain.auth.usecase.LoginUseCases
 import com.engin.eagerbeaver.domain.auth.usecase.ValidateUser
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,17 +60,28 @@ class LoginViewModel @Inject constructor(
                         }
                         is Resource.Success -> {
                             val result = resource.data
-                            result?.let {
-                                preferences.saveLogin(true)
-                                preferences.saveUserType(if(it.dataLoginDto.userType.startsWith("A")) UserRole.APPLICANT else UserRole.EMPLOYEE)
-                                preferences.saveUserID(it.dataLoginDto.userId.toLong())
+                            result?.let { returnLogin ->
+                                if(returnLogin.error.isNullOrBlank()){
+                                    preferences.saveLogin(true)
+                                    preferences.saveUserType(if(returnLogin.dataLoginDto?.userType!!.startsWith("A")) UserRole.APPLICANT else UserRole.EMPLOYEE)
+                                    preferences.saveUserID(returnLogin.dataLoginDto.userId.toLong())
+                                    _state.update {
+                                        it.copy(
+                                            isLoading = false,
+                                            navigateNext = Route.Home()
+                                        )
+                                    }
+                                }else{
+                                    _state.update {
+                                        it.copy(
+                                            isLoading = false,
+                                            errorMessage = UiText.DynamicString(returnLogin.error)
+                                        )
+                                    }
+                                }
+
                             }
-                            _state.update {
-                                it.copy(
-                                    isLoading = false,
-                                    navigateNext = Route.Home()
-                                )
-                            }
+
                         }
                     }
                 }.launchIn(viewModelScope)
@@ -99,7 +111,7 @@ class LoginViewModel @Inject constructor(
                     }
                 }
                 is Resource.Success -> {
-                    if(resource.data != null && resource.data.error.isNullOrBlank()){
+                    if(resource.data?.data != null && resource.data.error.isNullOrBlank()){
                         preferences.saveLogin(true)
                         preferences.saveUserType(UserRole.APPLICANT)
                         preferences.saveUserID(resource.data.data.id.toLong())
@@ -146,8 +158,7 @@ class LoginViewModel @Inject constructor(
     fun navigated(){
         _state.update {
             it.copy(
-                navigateNext = null,
-                isDataAvailable = false
+                navigateNext = null
             )
         }
     }

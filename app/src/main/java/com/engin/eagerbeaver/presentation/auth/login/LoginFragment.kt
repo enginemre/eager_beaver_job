@@ -131,13 +131,14 @@ class LoginFragment : Fragment() {
                     }
                 }
                 currentState.isDataAvailable?.let { result ->
-                    if (!result) {
+                    if (result) {
                         CustomSnackBar.make(
                             requireContext(),
                             requireView(),
-                            "Mevcut email ile ilgili kayıt bulunmamaktadır. Lütfen önce kayıt olunuz ",
+                            "Lütfen önce kayıt olunuz. ",
                             SnackType.ERROR
                         ).show()
+                        viewModel.messageShown()
                     } else {
                         startActivity(Intent(requireActivity(), MainActivity::class.java))
                         requireActivity().overridePendingTransition(

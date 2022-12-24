@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class JobDto(
     @SerializedName("category")
-    val category: String,
+    val category: DataCategoryDto,
     @SerializedName("country")
     val country: String,
     @SerializedName("date_published")
@@ -13,7 +13,7 @@ data class JobDto(
     @SerializedName("description")
     val description: String,
     @SerializedName("employer")
-    val employer: String,
+    val employer: EmployerDto,
     @SerializedName("enabled")
     val enabled: Boolean,
     @SerializedName("id")

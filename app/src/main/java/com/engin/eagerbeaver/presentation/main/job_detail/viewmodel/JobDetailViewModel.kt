@@ -286,7 +286,7 @@ class JobDetailViewModel @Inject constructor(
                     }
                 }
                 is Resource.Success -> {
-                    resource.data?.let {_->
+                    resource.data?.let {data->
                         _state.update {
                             it.copy(
                                 isLoading = false,
@@ -313,10 +313,9 @@ class JobDetailViewModel @Inject constructor(
     }
 
     override fun onRetryError() {
-//        getJobDetail(advertId)
         _state.update {
             it.copy(
-                warningMessage = UiText.DynamicString("Tekrar denenecek")
+                warningMessage = null
             )
         }
     }

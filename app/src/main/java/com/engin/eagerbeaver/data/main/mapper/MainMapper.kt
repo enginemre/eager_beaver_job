@@ -9,8 +9,8 @@ fun ProfileBodyDto.toApplicantUser() : ApplicantUser{
         name = this.data.fullName,
         userEmail = this.email,
         userType = if(this.userType.startsWith("A")) UserRole.APPLICANT else UserRole.EMPLOYEE,
-        userName = this.data.user.username,
-        imageUrl =  this.data.image,
+        userName = this.data.user,
+        imageUrl =  this.data.image ?: "https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914__340.png",
         birthDate = Date(),
         description = this.data.description ?: "",
         category = this.data.interestedWith?.map { it.id } ?: listOf(1),
@@ -61,7 +61,7 @@ fun EmployerDto.toUser() : EmployeeUser {
     )
 }
 
-fun AppiedJobsDto.toJobAdverts() : List<JobAdvert>{
+fun AppliedJobReturnDto.toJobAdverts() : List<JobAdvert>{
     return this.data.map {
         JobAdvert(
             title = it.job.title,
@@ -70,10 +70,10 @@ fun AppiedJobsDto.toJobAdverts() : List<JobAdvert>{
             salary = it.job.salary,
             cratedDate = it.job.datePublished,
             description = it.job.description,
-            companyImageUrl = it.jobİmage,
-            company = it.applicant.toUser(),
+            companyImageUrl = it.job_image,
+            company = it.job.employer.toUser(),
             status = it.status,
-            category = it.category.toCategory(),
+            category = it.job.category.toCategory(),
             id = it.id.toLong()
         )
     }

@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
             android:elevation="15dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

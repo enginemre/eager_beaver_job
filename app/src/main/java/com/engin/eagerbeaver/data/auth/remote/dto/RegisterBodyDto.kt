@@ -19,5 +19,7 @@ data class RegisterBodyDto(
     @SerializedName("user_type")
     val userType: String,
     @SerializedName("username")
-    val username: String
+    val username: String,
+    @SerializedName("birth_date")
+    val birthDate:String,
 )

@@ -22,12 +22,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment(),MenuProvider {
+class ProfileFragment : Fragment(), MenuProvider {
 
-    private var _binding:FragmentProfileBinding? = null
+    private var _binding: FragmentProfileBinding? = null
     val binding get() = _binding!!
 
-    private val viewModel:ProfileViewModel by viewModels()
+    private val viewModel: ProfileViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +38,8 @@ class ProfileFragment : Fragment(),MenuProvider {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentProfileBinding.inflate(inflater,container,false)
-        return  binding.root
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,18 +49,33 @@ class ProfileFragment : Fragment(),MenuProvider {
         observeData()
     }
 
-    private fun init(){
+    private fun init() {
         binding.editProfile.setOnClickListener {
-            viewModel.editProfile()
+            viewModel.editProfile(
+                description = binding.description.text.toString(),
+                email = binding.emailProfile.text.toString(),
+                fullName = binding.nameProfile.text.toString(),
+                title = binding.birthdateProfile.text.toString(),
+                username = binding.usernameProfile.text.toString()
+            )
+        }
+        binding.cvAddUser.setOnClickListener {
+            CustomSnackBar.make(
+                requireContext(),
+                requireView(),
+                "Şuanda bu özellik çalışmamaktadır",
+                SnackType.WARNING
+            ).show()
         }
     }
-    private fun observeData(){
+
+    private fun observeData() {
         lifecycleScope.launchWhenStarted {
-            viewModel.state.collect{currentState->
-                if(currentState.isLoading){
-                    LoadingDialog.showLoading(requireContext(),false)
+            viewModel.state.collect { currentState ->
+                if (currentState.isLoading) {
+                    LoadingDialog.showLoading(requireContext(), false)
                     return@collect
-                }else{
+                } else {
                     LoadingDialog.hideLoading()
                 }
                 currentState.errorMessage?.let {
@@ -81,8 +96,8 @@ class ProfileFragment : Fragment(),MenuProvider {
                     ).show()
                     viewModel.messageShown()
                 }
-                currentState.route?.let{route->
-                    when(route){
+                currentState.route?.let { route ->
+                    when (route) {
                         is Route.Login -> {
                             startActivity(Intent(requireActivity(), AuthActivity::class.java))
                             requireActivity().overridePendingTransition(
@@ -90,15 +105,19 @@ class ProfileFragment : Fragment(),MenuProvider {
                                 R.anim.slide_out_right
                             )
                             requireActivity().finish()
-                        }else -> {}
+                        }
+                        else -> {}
                     }
                     viewModel.navigated()
+                }
+                currentState.user?.let {
+                    binding.user = it
                 }
             }
         }
     }
 
-    private fun setMenu(){
+    private fun setMenu() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
@@ -106,20 +125,20 @@ class ProfileFragment : Fragment(),MenuProvider {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding =null
+        _binding = null
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.profile_menu,menu)
+        menuInflater.inflate(R.menu.profile_menu, menu)
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-       return when(menuItem.itemId){
+        return when (menuItem.itemId) {
             R.id.logout_profile -> {
                 viewModel.logout()
                 true
             }
-            else->{
+            else -> {
                 false
             }
         }

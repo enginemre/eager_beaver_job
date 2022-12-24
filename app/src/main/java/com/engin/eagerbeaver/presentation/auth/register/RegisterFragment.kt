@@ -109,8 +109,7 @@ class RegisterFragment : Fragment() {
     }
 
     private fun gotoNexPage() {
-        val action = RegisterFragmentDirections.actionRegisterFragmentToHomeGraph()
-        findNavController().navigate(action)
+        findNavController().navigateUp()
     }
 
     override fun onDestroyView() {

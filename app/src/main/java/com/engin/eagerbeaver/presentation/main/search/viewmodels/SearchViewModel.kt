@@ -6,9 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.engin.eagerbeaver.common.domain.model.*
 import com.engin.eagerbeaver.common.domain.util.Resource
 import com.engin.eagerbeaver.common.presentation.util.Route
+import com.engin.eagerbeaver.domain.main.usecase.GetCategoriesUseCase
 import com.engin.eagerbeaver.domain.main.usecase.SearchJobUseCase
 import com.engin.eagerbeaver.presentation.main.home.components.JobCardListener
 import com.engin.eagerbeaver.presentation.main.search.SearchState
+import com.engin.eagerbeaver.presentation.main.search.component.FilterClick
+import com.engin.eagerbeaver.presentation.main.search.component.FilterItem
+import com.engin.eagerbeaver.presentation.main.search.component.JobFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -18,23 +22,28 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val searchJobUseCase: SearchJobUseCase
+    private val searchJobUseCase: SearchJobUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel(),JobCardListener {
 
     private var _state:MutableStateFlow<SearchState> = MutableStateFlow(SearchState())
     val state:StateFlow<SearchState> = _state.asStateFlow()
-    private val categoryId :Long? = savedStateHandle["category_id"]
+    private var categoryId :Long? = savedStateHandle["category_id"]
 
     private var searchJob: Job? =null
+    private var getCategories:Job? = null
 
     init {
+        if(categoryId != null &&  categoryId== 0L)
+            categoryId = null
         getJobs(category_id = categoryId)
     }
-    private fun getJobs(category_id:Long?,jobType: JobType? =null){
-        if(category_id != null && category_id == 0L){
+
+
+    fun getJobs(category_id:Long?,jobType: JobType? =null,title: String? = null){
             // Get jobs without filter
             searchJob?.cancel()
-            searchJob = searchJobUseCase(jobType = jobType, categoryId = categoryId).onEach { resource ->
+            searchJob = searchJobUseCase(jobType = jobType, categoryId = category_id,title = title).onEach { resource ->
                 when(resource){
                     is Resource.Error -> {
                         _state.update {
@@ -63,9 +72,7 @@ class SearchViewModel @Inject constructor(
                     }
                 }
             }.launchIn(viewModelScope)
-        }else{
-            // Activate filter
-        }
+
 
 
         /*val jobList:List<JobAdvert>
@@ -283,12 +290,56 @@ class SearchViewModel @Inject constructor(
         }*/
     }
 
-    fun applyFilter(){
-
+    fun applyFilter(type: String? =null, categoryId:Long? = null){
+        type?.let {
+            val filter = JobFilter(categoryId,it)
+            _state.update { state->
+                state.copy(
+                    filter = filter
+                )
+            }
+        }
     }
 
     fun clearFilter(){
+        _state.update {
+            it.copy(
+                filter = null
+            )
+        }
+    }
 
+    fun getCategories(){
+        getCategories?.cancel()
+        getCategories =  getCategoriesUseCase().onEach {resource ->
+            when(resource){
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = resource.message
+                        )
+                    }
+                }
+                is Resource.Loading -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
+                is Resource.Success -> {
+                    resource.data?.let {data->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                categoryList =data
+                            )
+                        }
+                    }
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
 
@@ -315,6 +366,39 @@ class SearchViewModel @Inject constructor(
                 shouldNavigate = Route.JobDetail(jobId = id)
             )
         }
+    }
+
+    fun search(query: String?) {
+        searchJob?.cancel()
+        searchJob = searchJobUseCase(jobType = null, categoryId = null,title = query).onEach { resource ->
+            when(resource){
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = resource.message
+                        )
+                    }
+                }
+                is Resource.Loading -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
+                is Resource.Success -> {
+                    resource.data?.let { data->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                jobsList = data
+                            )
+                        }
+                    }
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
 }

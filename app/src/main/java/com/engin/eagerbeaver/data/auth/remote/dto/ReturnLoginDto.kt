@@ -5,5 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ReturnLoginDto(
     @SerializedName("data")
-    val dataLoginDto: DataLoginDto
+    val dataLoginDto: DataLoginDto?,
+    @SerializedName("error")
+    val error :String?
 )

@@ -65,7 +65,7 @@ class RegisterViewModel @Inject constructor(
                         }
                         is Resource.Success -> {
                            resource.data?.let { result->
-                               if(result.message.isNotEmpty()){
+                               if((result.error?.success != null && result.error.success )|| result.message.equals("OK") ){
                                    _state.update {
                                        it.copy(
                                            isLoading = false,
