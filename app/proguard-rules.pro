@@ -28,6 +28,27 @@
 -keep class com.engin.eagerbeaver.data.auth.remote.dto.* { *; }
 -keep class com.engin.eagerbeaver.domain.auth.model.* { *; }
 -keep class com.engin.eagerbeaver.domain.main.model.* { *; }
+-dontwarn okio.**
+-dontwarn java.lang.invoke.*
+-keep class retrofit.** { *; }
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keepclasseswithmembers class * {
+    @retrofit.http.* <methods>;
+}
+-keepclasseswithmembers interface * {
+    @retrofit.http.* <methods>;
+}
+-keepclasseswithmembers interface * {
+    @retrofit2.* <methods>;
+}
+
+-keep class com.google.gson.** { *; }
+-keep class com.google.inject.** { *; }
+-keep class javax.inject.** { *; }
+ -keep class com.yourproject.YourClass**
+-keep class com.engin.** { *; }
 -keep class com.google.** { *; }
 -keep class com.github.** { *; }
 -keep class org.apache.** { *; }
