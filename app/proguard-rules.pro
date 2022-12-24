@@ -20,15 +20,8 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.engin.eagerbeaver.data.auth.mapper.* { *; }
--keep class com.engin.eagerbeaver.data.main.mapper.* { *; }
--keep class com.engin.eagerbeaver.data.main.remote.dto.* { *; }
--keep class com.engin.eagerbeaver.common.domain.model.* { *; }
--keep class com.engin.eagerbeaver.data.main.remote.dto.* { *; }
--keep class com.engin.eagerbeaver.data.auth.remote.dto.* { *; }
--keep class com.engin.eagerbeaver.domain.auth.model.* { *; }
--keep class com.engin.eagerbeaver.domain.main.model.* { *; }
 -dontwarn okio.**
+-keep class com.google.googlesignin.** { *; }
 -dontwarn java.lang.invoke.*
 -keep class retrofit.** { *; }
 -keep class retrofit2.** { *; }
@@ -54,3 +47,11 @@
 -keep class org.apache.** { *; }
 -keep class com.android.** { *; }
 -keep class junit.** { *; }
+-keep class com.engin.eagerbeaver.data.auth.mapper.* { *; }
+-keep class com.engin.eagerbeaver.data.main.mapper.* { *; }
+-keep class com.engin.eagerbeaver.data.main.remote.dto.* { *; }
+-keep class com.engin.eagerbeaver.common.domain.model.* { *; }
+-keep class com.engin.eagerbeaver.data.main.remote.dto.* { *; }
+-keep class com.engin.eagerbeaver.data.auth.remote.dto.* { *; }
+-keep class com.engin.eagerbeaver.domain.auth.model.* { *; }
+-keep class com.engin.eagerbeaver.domain.main.model.* { *; }
