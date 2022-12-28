@@ -4,7 +4,7 @@ Eager Beaver Job , Kullanıcılar aradıkları işlere uygulama sayesinde kolayc
 İş veren ya da iş arayan olun  hemen kaydolun ve iş aramaya başlayın.
 
 
-### Kullanılan Teknolojiler ve Yaklaşımlar
+### Kullanılan Teknolojiler ve Yaklaşımlar
 
 - MVVM Pattern
 - Repository Pattern
@@ -30,7 +30,7 @@ Eager Beaver Job, Users can easily reach the jobs they are looking for thanks to
 whether you are an employer or job seeker register now and start your job search.
 
 
-### Used Technologies
+### Used Technologies
 
 - MVVM Pattern
 - Repository Pattern
