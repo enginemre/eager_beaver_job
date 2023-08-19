@@ -46,3 +46,5 @@ whether you are an employer or job seeker register now and start your job search
 - Google Sigin API 
 - GSON for serializing 
 - Databinding and Viewbinding
+
+![Download App](google-play-badge.png)
